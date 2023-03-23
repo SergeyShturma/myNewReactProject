@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   Keyboard,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from "react-native";
 
@@ -39,56 +40,66 @@ export default function LoginScreen() {
           source={require("../assets/Images/photoBG.jpg")}
           style={styles.image}
         >
-          <View
-            style={{
-              ...styles.form,
-              marginBottom: isShowKeyboard ? -291 : 0,
-            }}
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <Text style={styles.title}>Войти</Text>
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Адрес электронной почты"
-                onFocus={() => {
-                  setIsShowKeyboard(true);
-                }}
-                onChangeText={(value) =>
-                  setState((prevState) => ({
-                    ...prevState,
-                    email: value,
-                  }))
-                }
-                value={state.email}
-              />
-            </View>
-            <View>
-              <TextInput
-                style={styles.input}
-                secureTextEntry={true}
-                placeholder="Пароль"
-                onFocus={() => {
-                  setIsShowKeyboard(true);
-                }}
-                onChangeText={(value) =>
-                  setState((prevState) => ({
-                    ...prevState,
-                    password: value,
-                  }))
-                }
-                value={state.password}
-              />
-            </View>
-
-            <TouchableOpacity
-              activeOpacity={0.65}
-              style={styles.btn}
-              onPress={submitForm}
+            <View
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 144,
+              }}
             >
-              <Text style={styles.btnTitle}>Войти</Text>
-            </TouchableOpacity>
-            <Text style={styles.auth}>Нет аккаунта? Зарегистрироваться</Text>
-          </View>
+              <Text style={styles.title}>Войти</Text>
+              <View>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Адрес электронной почты"
+                  onFocus={() => {
+                    setIsShowKeyboard(true);
+                  }}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({
+                      ...prevState,
+                      email: value,
+                    }))
+                  }
+                  value={state.email}
+                />
+              </View>
+              <View>
+                <TextInput
+                  style={styles.input}
+                  secureTextEntry={true}
+                  placeholder="Пароль"
+                  onFocus={() => {
+                    setIsShowKeyboard(true);
+                  }}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({
+                      ...prevState,
+                      password: value,
+                    }))
+                  }
+                  value={state.password}
+                />
+              </View>
+              {!isShowKeyboard && (
+                <TouchableOpacity
+                  activeOpacity={0.65}
+                  style={styles.btn}
+                  onPress={submitForm}
+                >
+                  <Text style={styles.btnTitle}>Войти</Text>
+                </TouchableOpacity>
+              )}
+              {!isShowKeyboard && (
+                <Text style={styles.auth}>
+                  Нет аккаунта? Зарегистрироваться
+                </Text>
+              )}
+            </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
@@ -103,8 +114,6 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "flex-end",
-    // alignItems: "center",
   },
 
   input: {
@@ -120,9 +129,10 @@ const styles = StyleSheet.create({
   form: {
     paddingHorizontal: 16,
     backgroundColor: "#fff",
-    height: 549,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    marginTop: "auto",
+    // justifyContent: "flex-end",
   },
   title: {
     fontSize: 30,

@@ -41,14 +41,14 @@ export default function RegistrationScreen() {
           style={styles.image}
           source={require("../assets/Images/photoBG.jpg")}
         >
-          <View
-            style={{
-              ...styles.form,
-              marginBottom: isShowKeyboard ? -175 : 0,
-            }}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
+            <View
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 100,
+              }}
             >
               <Text style={styles.title}>Регистрация</Text>
               <TextInput
@@ -94,22 +94,26 @@ export default function RegistrationScreen() {
                 }
                 value={state.password}
               />
-            </KeyboardAvoidingView>
-            <TouchableOpacity
-              activeOpacity={0.65}
-              style={styles.btn}
-              onPress={submitForm}
-            >
-              <Text style={styles.btnTitle}>Зарегистрироваться</Text>
-            </TouchableOpacity>
-            <Text style={styles.auth}>Уже есть аккаунт? Войти</Text>
-            <View style={styles.avatar}>
-              <TouchableOpacity
-                style={styles.addAvatar}
-                activeOpacity={0.65}
-              ></TouchableOpacity>
+              {!isShowKeyboard && (
+                <TouchableOpacity
+                  activeOpacity={0.65}
+                  style={styles.btn}
+                  onPress={submitForm}
+                >
+                  <Text style={styles.btnTitle}>Зарегистрироваться</Text>
+                </TouchableOpacity>
+              )}
+              {!isShowKeyboard && (
+                <Text style={styles.auth}>Уже есть аккаунт? Войти</Text>
+              )}
+              <View style={styles.avatar}>
+                <TouchableOpacity
+                  style={styles.addAvatar}
+                  activeOpacity={0.65}
+                ></TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
@@ -125,7 +129,6 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
-    // alignItems: "center",
   },
 
   input: {
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
   form: {
     paddingHorizontal: 16,
     backgroundColor: "#fff",
-    height: 549,
+    marginTop: "auto",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     position: "relative",
