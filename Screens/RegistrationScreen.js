@@ -18,7 +18,7 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
 
@@ -104,7 +104,16 @@ export default function RegistrationScreen() {
                 </TouchableOpacity>
               )}
               {!isShowKeyboard && (
-                <Text style={styles.auth}>Уже есть аккаунт? Войти</Text>
+                <Text style={styles.auth}>
+                  Уже есть аккаунт?&nbsp;
+                  <TouchableOpacity
+                    style={styles.authBtn}
+                    activeOpacity={0.65}
+                    onPress={() => navigation.navigate("Login")}
+                  >
+                    <Text style={styles.authTitle}>Войти</Text>
+                  </TouchableOpacity>
+                </Text>
               )}
               <View style={styles.avatar}>
                 <TouchableOpacity
@@ -168,7 +177,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   btnTitle: { fontSize: 16, lineHeight: 19, color: "#fff" },
-  auth: { textAlign: "center", fontSize: 16, lineHeight: 19, color: "#1B4371" },
+  auth: {
+    textAlign: "center",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#1B4371",
+  },
   avatar: {
     position: "absolute",
     top: -60,

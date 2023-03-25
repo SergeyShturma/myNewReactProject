@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -10,16 +10,32 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
+// import BackgroundPic from "./BackgroundPic";
 
 const initialState = {
   email: "",
   password: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+  const [dimensions, setDimensions] = useState(Dimensions.get("window").width);
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width;
+      console.log("width: ", width);
+      setDimensions(width);
+    };
+
+    Dimensions.addEventListener("change", onChange);
+    return () => {
+      Dimensions.removeEventListener("change", onChange);
+    };
+  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -36,6 +52,7 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
+        {/* <BackgroundPic /> */}
         <ImageBackground
           source={require("../assets/Images/photoBG.jpg")}
           style={styles.image}
@@ -48,6 +65,7 @@ export default function LoginScreen() {
               style={{
                 ...styles.form,
                 paddingBottom: isShowKeyboard ? 32 : 144,
+                width: dimensions,
               }}
             >
               <Text style={styles.title}>Войти</Text>
@@ -85,18 +103,24 @@ export default function LoginScreen() {
                 />
               </View>
               {!isShowKeyboard && (
-                <TouchableOpacity
-                  activeOpacity={0.65}
-                  style={styles.btn}
-                  onPress={submitForm}
-                >
-                  <Text style={styles.btnTitle}>Войти</Text>
-                </TouchableOpacity>
-              )}
-              {!isShowKeyboard && (
-                <Text style={styles.auth}>
-                  Нет аккаунта? Зарегистрироваться
-                </Text>
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.65}
+                    style={styles.btn}
+                    onPress={submitForm}
+                  >
+                    <Text style={styles.btnTitle}>Войти</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.auth}>
+                    Нет аккаунта?&nbsp;
+                    <TouchableOpacity
+                      activeOpacity={0.65}
+                      onPress={() => navigation.navigate("Registration")}
+                    >
+                      <Text style={styles.authTitle}>Зарегистрироваться</Text>
+                    </TouchableOpacity>
+                  </Text>
+                </View>
               )}
             </View>
           </KeyboardAvoidingView>
@@ -114,6 +138,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     resizeMode: "cover",
+    alignItems: "center",
   },
 
   input: {
@@ -132,7 +157,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     marginTop: "auto",
-    // justifyContent: "flex-end",
   },
   title: {
     fontSize: 30,
